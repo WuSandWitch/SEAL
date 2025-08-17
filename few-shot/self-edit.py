@@ -390,7 +390,7 @@ def get_prompt(task: Task, system_message: str, self_edit_prompt: str):
     prompt = f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{system_message}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{user_message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
     return prompt
 
-def main(experiment_name, skip_repeated_configs, challenge_file, solution_file, model_name, n_tasks, n_self_edits_per_task):
+def main(experiment_name, skip_repeated_configs, challenge_file, solution_file, model_name, n_tasks, n_self_edits_per_task, checkpoint_dir):
     # lora config
     lora_config = LoraConfig(
         r=128, 
@@ -556,7 +556,7 @@ def main(experiment_name, skip_repeated_configs, challenge_file, solution_file, 
 
             adapter_path = ttt.update_model(
                 task_text_list=task_text_list,
-                output_dir=f"loras/self-edit/{experiment_name}/{base_task_name}/{task_ttt}",
+                output_dir=f"{checkpoint_dir}/loras/self-edit/{experiment_name}/{base_task_name}/{task_ttt}",
                 batch_size=batch_size,
                 gradient_accumulation_steps=gradient_accumulation_steps,
                 learning_rate=config["training"]["learning_rate"],
@@ -573,7 +573,7 @@ def main(experiment_name, skip_repeated_configs, challenge_file, solution_file, 
     del ttt
 
     # Save final configs and indices to file
-    configs_file = os.path.join(f"loras/self-edit/{experiment_name}", "final_configs_and_indices.json")
+    configs_file = os.path.join(f"{checkpoint_dir}/loras/self-edit/{experiment_name}", "final_configs_and_indices.json")
     os.makedirs(os.path.dirname(configs_file), exist_ok=True)
     with open(configs_file, "w") as f:
         json.dump(final_configs_and_indices, f)
@@ -596,6 +596,8 @@ if __name__ == "__main__":
                       help='Number of tasks to process')
     parser.add_argument('--n_self_edits_per_task', type=int, required=True,
                       help='Number of self-edits per task')
+    parser.add_argument('--checkpoint_dir', type=str, default="./",
+                      help='Directory for saving checkpoints and results')
 
     args = parser.parse_args()
     
@@ -606,7 +608,8 @@ if __name__ == "__main__":
         solution_file=args.solution_file,
         model_name=args.model_name,
         n_tasks=args.n_tasks,
-        n_self_edits_per_task=args.n_self_edits_per_task
+        n_self_edits_per_task=args.n_self_edits_per_task,
+        checkpoint_dir=args.checkpoint_dir
     )
     
    
