@@ -596,7 +596,7 @@ if __name__ == "__main__":
                       help='Number of tasks to process')
     parser.add_argument('--n_self_edits_per_task', type=int, required=True,
                       help='Number of self-edits per task')
-    parser.add_argument('--checkpoint_dir', type=str, default="./",
+    parser.add_argument('--checkpoint_dir', type=str, default="./loras",
                       help='Directory for saving checkpoints and results')
 
     args = parser.parse_args()
