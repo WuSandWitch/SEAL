@@ -376,5 +376,7 @@ print(final_results)
 for k in final_results.keys():
     final_results[k] = final_results[k].to_dict()
 
-with open(os.path.join("final_results.json"), "w") as f:
+final_results_file = os.path.join(args.experiment_folder, "final_results.json")
+with open(final_results_file, "w") as f:
     json.dump(final_results, f)
+print(f"Final results file is saved to {final_results_file}")

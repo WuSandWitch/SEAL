@@ -21,6 +21,7 @@ def parse_args():
     parser.add_argument('--per_device_train_batch_size', type=int, required=True, help='Batch size per device for training')
     parser.add_argument('--gradient_accumulation_steps', type=int, required=True, help='Number of steps to accumulate gradients')
     parser.add_argument('--learning_rate', type=float, required=True, help='Learning rate for training')
+    parser.add_argument('--output_dir', type=str, default='./RL_trained_model', help='Output directory for saving the trained model')
     return parser.parse_args()
 
 # Parse arguments
@@ -171,7 +172,7 @@ clean_model = AutoModelForCausalLM.from_pretrained(
 )
 
 # Final save to output directory
-output_dir = "./RL_trained_model"
+output_dir = args.output_dir
 clean_model.save_pretrained(
     output_dir,
     safe_serialization=True,
